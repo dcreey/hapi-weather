@@ -1,0 +1,11 @@
+{
+  "name": "chicago-weather",
+  "dependencies": {
+    "jquery": "latest",
+    "angular": "latest",
+    "bootstrap": "latest",
+    "angular-ui-router": "latest",
+    "angular-mocks": "latest",
+    "d3": "latest"
+  }
+}

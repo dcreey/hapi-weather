@@ -1,0 +1,11 @@
+<div class="container" ng-controller="temperatureCtrl as temperature">
+    <div class="row" id="TemperatureGraph"></div>
+    <div class="row top-buffer">
+        <label>Change Frequency -</label>
+        <select name="frequencySelect" ng-model="temperature.frequency" ng-change="temperature.getDataAndBuildGraph()">
+            <option value="day">Day</option>
+            <option value="week">Week</option>
+            <option value="month">Month</option>
+        </select>
+    </div>
+</div>
