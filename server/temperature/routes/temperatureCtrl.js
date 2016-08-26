@@ -67,7 +67,7 @@ function average(arr, frequency) {
     }
 
     for(date in sums) {
-        var val = { date: Date.parse(date) };
+        var val = { date: date };
         for (var p in sums[date]) val[p] = sums[date][p] / counts[date];
         results.push(val);
     }

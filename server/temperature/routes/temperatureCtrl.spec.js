@@ -13,8 +13,18 @@ describe('Test Temperature Server Controller', function() {
         var defaultToDate = new Date(2015,11,1);
         var defaultFromDate = new Date(2014, 11, 30);
 
-        tempCtrl.getTemperatureData('day', 'min', Date.parse(defaultToDate), Date.parse(defaultFromDate)).then((returnObj) =>{
+        tempCtrl.getTemperatureData('day', '', Date.parse(defaultToDate), Date.parse(defaultFromDate)).then((returnObj) =>{
             returnObj.length.should.greaterThan(0);
+            done();
+        })
+    })
+
+    it('should return all months', (done) => {
+        var defaultToDate = new Date(2015,11,1);
+        var defaultFromDate = new Date(2014, 11, 30);
+
+        tempCtrl.getTemperatureData('month', 'min', Date.parse(defaultToDate), Date.parse(defaultFromDate)).then((returnObj) =>{
+            returnObj.length.should.equal(11);
             done();
         })
     })
