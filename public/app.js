@@ -9,7 +9,7 @@ var app = angular.module("cwv", ['ui.router'])
                 $rootScope.$state = $state;
                 $rootScope.$stateParams = $stateParams;
                 $rootScope.webUrl = "http://127.0.0.1:80";
-                $rootScope.apiUrl = "http://127.0.0.1:9000/api/";
+                $rootScope.apiUrl = "http://127.0.0.1:9000/";
             }]
     );
 app.config(function($stateProvider, $urlRouterProvider) {

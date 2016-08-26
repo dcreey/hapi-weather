@@ -15,7 +15,7 @@ exports.register = function (server, options, next) {
     // defaults to both min and max values at frequency of days
     api.route({
         method: 'GET',
-        path: '/api/temperature/search',
+        path: '/temperature/search',
         handler: function(request, reply) {
             var freq = request.query.frequency || 'day';
             var measurement = request.query.measurement || '';
@@ -32,7 +32,7 @@ exports.register = function (server, options, next) {
     // These methods weren't necessary for the front-end
     api.route({
         method: 'GET',
-        path: '/api/temperature/{date}',
+        path: '/temperature/{date}',
         handler: function(request, reply) {
             // get temperature data
         }
@@ -40,7 +40,7 @@ exports.register = function (server, options, next) {
 
     api.route({
         method: 'PUT',
-        path: '/api/temperature/{date}',
+        path: '/temperature/{date}',
         handler: function(request, reply) {
             // update temperature data
         }
@@ -48,7 +48,7 @@ exports.register = function (server, options, next) {
 
     api.route({
         method: 'DELETE',
-        path: '/api/temperature/{date}',
+        path: '/temperature/{date}',
         handler: function(request, reply) {
             // delete temperature data
         }
@@ -56,7 +56,7 @@ exports.register = function (server, options, next) {
 
     api.route({
         method: 'POST',
-        path: '/api/temperature/{date}',
+        path: '/temperature/{date}',
         handler: function(request, reply) {
             // Create temperature data
         }
