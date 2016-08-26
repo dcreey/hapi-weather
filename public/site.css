@@ -2,7 +2,7 @@
     font-size: 14px;
 }
 .main-content{
-    padding-top: 100px;
+    padding-top: 70px;
 }
 
 html,
@@ -58,4 +58,12 @@ svg {
     fill: none;
 }
 
+.legend text{
+    font-size:14px;
+}
+
 .top-buffer { margin-top:20px; }
+
+.description{
+    line-height: 1.5;
+}

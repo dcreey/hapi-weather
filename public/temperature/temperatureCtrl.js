@@ -15,21 +15,14 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
     }
 
     function getAll() {
-        return $http.get($rootScope.apiUrl + 'temperature/' + temperature.frequency);
+        return $http.get($rootScope.apiUrl + 'temperature/search', {params:{"frequency": temperature.frequency }});
     }
-
-    //temperature.getMin = function() {
-    //    $http.get();
-    //}
-
-    //temperature.getMax = function() {
-    //    $http.get();
-    //}
 
     function removeGraph() {
         temperature.graphContainer.html("");
     }
 
+    // d3 - procedural mess
     function buildLineGraph(data) {
         var margin = {top: 10, right: 10, bottom: 100, left: 40},
             margin2 = {top: 430, right: 10, bottom: 20, left: 40},
@@ -69,13 +62,6 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
             .attr("height", height + margin.top + margin.bottom)
             .style("overflow", "initial");
 
-        svg.append("text")
-            .attr("x", (width / 2 + margin.left))
-            .attr("y", 0 - (margin.top))
-            .attr("text-anchor", "middle")
-            .style("font-size", "24px")
-            .text("Chicago Temperature 2015" + getGraphTitle()  );
-
         svg.append("defs").append("clipPath")
             .attr("id", "clip")
             .append("rect")
@@ -87,7 +73,6 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
 
         var context = svg.append("g")
             .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-
 
         color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 
@@ -188,10 +173,10 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
             .data(sources)
             .enter()
             .append("text")
-            .attr("x", width + 52)
-            .attr("y", function(d, i){ return i *  20 + 8;})
+            .attr("x", width + 45)
+            .attr("y", function(d, i){ return i *  20 + 9.5;})
             .text(function(d) {
-                var text = d.name;
+                var text = d.name.charAt(0).toUpperCase() + d.name.slice(1);
                 return text;
             });
     }

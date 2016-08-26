@@ -1,11 +1,22 @@
 <div class="container" ng-controller="temperatureCtrl as temperature">
-    <div class="row" id="TemperatureGraph"></div>
-    <div class="row top-buffer">
-        <label>Change Frequency -</label>
-        <select name="frequencySelect" ng-model="temperature.frequency" ng-change="temperature.getDataAndBuildGraph()">
-            <option value="day">Day</option>
-            <option value="week">Week</option>
-            <option value="month">Month</option>
-        </select>
+    <div class="row">
+        <h3 class="col-lg-10">Chicago Temperature 2015 {{temperature.getGraphTitle()}}</h3>
     </div>
+    <div class="row">
+        <h5 class="col-lg-10 description">Below is an interactive visualization of the min and max temperatures for the first 11 months of 2015 on a given day.
+            Highlight a section of the lower graph to zoom in on a range of dates in the upper graph. Drag that selection to change the range of dates.
+            The dropdown below can be used to change the frequency by which the temperatures are averaged over (day, week, month).
+        </h5>
+    </div>
+    <div class="row">
+        <div class="col-lg-10">
+            <label>Frequency -</label>
+            <select name="frequencySelect" ng-model="temperature.frequency" ng-change="temperature.getDataAndBuildGraph()">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+            </select>
+        </div>
+    </div>
+    <div class="row top-buffer" id="TemperatureGraph"></div>
 </div>

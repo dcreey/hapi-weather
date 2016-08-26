@@ -2,52 +2,42 @@
  * Created by dcreey on 8/23/2016.
  */
 
-var Path = require("Path");
-var FileReader = require(Path.join(global.appRoot ,"helpers/FileReader"));
+var Path = require('Path');
+var FileReader = require(Path.join(global.appRoot, 'helpers/FileReader'));
+var Promise = require('bluebird');
 
 var filePath = Path.join(global.appRoot ,"data/weather_data.csv");
 
-var Readable = require('stream').Readable;
+var column;
 
 module.exports = function () {
     return {
-        getTemperatureData(request, reply) {
-            var frequency = request.params.frequency;
-            getTemperatureData(reply, frequency);
-        },
+        // Get data from stream, transform it, and average temperatures by frequency
+        getTemperatureData(frequency, columnName) {
+            column = columnName;
+            return new Promise((res, rej) => {
+                var fileReader = new FileReader(filePath);
 
-        getMinTemperatureData(request, reply) {
-            var frequency = request.params.frequency;
-            getTemperatureData(reply, frequency, "min");
-        },
-
-        getMaxTemperatureData(request, reply) {
-            var frequency = request.params.frequency;
-            getTemperatureData(reply, frequency, "max");
+                fileReader.getFile(transformTemperatureCSV).then((stream) => {
+                    var dataArr = [];
+                    stream.on("data", function(data){
+                        dataArr.push(data);
+                    })
+                    stream.on("end", function() {
+                        // This should occur as a db query
+                        // We shouldn't need to read all of the data into memory
+                        if (frequency) if (frequency !== "day") dataArr = average(dataArr, frequency);
+                        // Send Data
+                        // Ideally would stream to client - cannot here for reason above
+                        res(dataArr);
+                    })
+                });
+            })
         }
     }
 };
 
 // Private methods
-
-function getTemperatureData(reply, frequency, columnName) {
-    var fileReader = new FileReader(filePath);
-
-    fileReader.getFile(transformTemperatureCSV, columnName).then((stream) => {
-        var dataArr = [];
-        stream.on("data", function(data){
-            dataArr.push(data);
-        })
-        stream.on("end", function() {
-            // This should occur as a db query
-            // We shouldn't need to read all of the data into memory
-            if (frequency) if (frequency !== "day") dataArr = average(dataArr, frequency);
-            // Send Data
-            // Ideally would stream to client - cannot here for reason above
-            reply(dataArr);
-        })
-    });
-}
 
 // Calculate averages of temperatures by frequency
 function average(arr, frequency) {
@@ -93,6 +83,7 @@ function getFirstDayOfWeek(d) {
     return d;
 }
 
+// pipe transform to modify csv stream
 function transformTemperatureCSV(data) {
     for (var p in data) {
         var cleanedName = p.trim().toLowerCase();
@@ -103,10 +94,10 @@ function transformTemperatureCSV(data) {
         delete data[p];
     }
     // return specific column with date
-    if (columnName) {
+    if (column) {
         return JSON.stringify({
             date: data.date,
-            [columnName]: data[columnName]
+            [column]: data[column]
         });
     }
     else return data;
