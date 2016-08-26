@@ -15,7 +15,8 @@ module.exports = function () {
                 menuItems.push(path[path.length - 1]);
             })
 
-            reply(menuItems);
+            if (!menuItems.length) reply({ error : "No temperature values found" }).code(404);
+            else reply(menuItems);
         }
     };
 }

@@ -16,7 +16,7 @@ describe('API Routing', function() {
     this.timeout(10000);
 
     it('should return a list of menus', (done) => {
-        request.get(url + '/api/menu', {timeout: 10500}, (err, response, body) => {
+        request.get(url + '/menus', {timeout: 10500}, (err, response, body) => {
             if (err) done(err);
 
             var menus = JSON.parse(body)

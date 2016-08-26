@@ -1,21 +1,22 @@
 /**
- * Created by dcreey on 8/23/2016.
+ * Created by dcreey on 8/26/2016.
  */
 
-var expect = require('expect');
 var appName = 'cwv';
+var expect = require('expect');
 
 describe('aboutCtrl', function() {
     beforeEach(window.angular.mock.module(appName));
 
-    var scope, ctrl;
+    var scope, temperature;
 
     beforeEach(inject(function($controller, $rootScope, $http) {
         scope = $rootScope.$new();
 
-        ctrl = $controller('aboutCtrl', {
+        temperature = $controller('temperatureCtrl', {
             $scope: scope,
-            $http: $http
+            $http: $http,
+            $rootScope: $rootScope
         });
     }));
 
@@ -23,7 +24,7 @@ describe('aboutCtrl', function() {
         expect(scope).toBeTruthy();
     });
 
-    it('should expose profileLink', function() {
-        expect(ctrl.emailAddress).toBeTruthy();
+    it('should have graph object in graph container', function() {
+        expect(temperature.graphContainer.select("svg")).toBeTruthy();
     });
 });

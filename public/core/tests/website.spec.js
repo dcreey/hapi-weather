@@ -1,12 +1,10 @@
 /**
  * Created by dcreey on 8/23/2016.
  */
-
-if (!global.appRoot) { global.appRoot = require('app-root-path').path; }
-var config = require(global.appRoot + '/config/env/' + (process.env.NODE_ENV || 'test'));
+var appName = 'cwv';
 
 describe('Website States - app.js', () => {
-    beforeEach(window.angular.mock.module(config.app.name));
+    beforeEach(window.angular.mock.module(appName));
     beforeEach(window.angular.mock.module('templates'));
 
     var scope, state, injector, ctrl, templateCache, compile, httpBackend;

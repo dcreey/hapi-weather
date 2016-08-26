@@ -1,5 +1,6 @@
 /**
  * Created by dcreey on 8/23/2016.
+ * NOT IMPLEMENTED
  */
 
 //app.provider('menu', function MenuProvider() {
@@ -19,8 +20,6 @@
 
 app.factory('Menus', ['$resource',
     function($resource) {
-        return $resource($rootScope.apiUrl + 'api/menu/:name', {
-            name: '@name'
-        });
+        return $resource($rootScope.apiUrl + 'menus');
     }
 ]);

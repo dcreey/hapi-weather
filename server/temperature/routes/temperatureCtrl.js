@@ -13,7 +13,7 @@ var column;
 module.exports = function () {
     return {
         // Get data from stream, transform it, and average temperatures by frequency
-        getTemperatureData(frequency, columnName) {
+        getTemperatureData(frequency, columnName, toDate, fromDate) {
             column = columnName;
             return new Promise((res, rej) => {
                 var fileReader = new FileReader(filePath);
@@ -27,6 +27,10 @@ module.exports = function () {
                         // This should occur as a db query
                         // We shouldn't need to read all of the data into memory
                         if (frequency) if (frequency !== "day") dataArr = average(dataArr, frequency);
+                        dataArr = dataArr.filter((val) => {
+                            return Date.parse(val.date) >= fromDate && Date.parse(val.date) < toDate
+                        });
+                        //dataArr = dataArr.filter((val) => { return Date.parse(val.date) < toDate });
                         // Send Data
                         // Ideally would stream to client - cannot here for reason above
                         res(dataArr);
@@ -95,10 +99,10 @@ function transformTemperatureCSV(data) {
     }
     // return specific column with date
     if (column) {
-        return JSON.stringify({
+        return {
             date: data.date,
             [column]: data[column]
-        });
+        };
     }
     else return data;
 }

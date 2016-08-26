@@ -8,7 +8,7 @@ exports.register = function (server, options, next) {
 
     api.route({
         method: 'GET',
-        path: '/menu',
+        path: '/menus',
         handler: menu.getMenus
     })
 

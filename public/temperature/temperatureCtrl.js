@@ -15,7 +15,7 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
     }
 
     function getAllTempertatureValues() {
-        return $http.get($rootScope.apiUrl + 'temperature/search', {params:{"frequency": temperature.frequency }});
+        return $http.get($rootScope.apiUrl + 'temperatures', {params:{"frequency": temperature.frequency }});
     }
 
     function removeGraph() {
