@@ -1,10 +1,22 @@
 # Visualizing Chicago's Weather
 
-View and interact with the last 10 months of temperature data from Chicago, IL. 
+View and interact with the first 11 months of temperature data from 2015 in Chicago, IL. 
 
 * Backend = Node + Hapi
 * Frontend = Angularjs
 * Visualizations = d3.js
+ 
+To build solution run the following command lines:
+* npm install
+* bower install
+ 
+View the website:
+* npm start
+* navigate in browser to localhost:80
+
+Send all API calls to:
+* localhost:9000
+
 
 Full test suite with Mocha, Karma, and protractor. Run the following npm commands to test solution:
 * npm test (mocha + karma)
