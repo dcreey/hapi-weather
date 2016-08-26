@@ -18,9 +18,9 @@ Send all API calls to:
 * localhost:9000
 
 
-Full test suite with Mocha, Karma, and protractor. Run the following npm commands to test solution:
-* npm test (mocha + karma)
-* npm test.e2e (protractor)
+Full test suite with Gulp tasks integrated with Mocha, Karma, and protractor. Run the following npm commands to test solution:
+* npm run test (mocha + karma)
+* npm run test-e2e (protractor)
 
 ----
 ## API - Endpoints
