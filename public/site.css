@@ -62,8 +62,35 @@ svg {
     font-size:14px;
 }
 
+.legend rect:hover{
+    cursor:pointer;
+}
+
+
+.legend rect.clicked{
+    opacity: .3;
+}
+
 .top-buffer { margin-top:20px; }
 
 .description{
     line-height: 1.5;
+}
+
+.hide {
+    display: none;
+}
+
+ul{
+    list-style-position: inside;
+}
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.focus circle {
+    fill: none;
+    stroke: steelblue;
 }

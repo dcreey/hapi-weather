@@ -8,13 +8,13 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
     temperature.graphContainer = d3.select("#TemperatureGraph");
 
     temperature.getDataAndBuildGraph = function() {
-        getAll().then(function(data) {
+        getAllTempertatureValues().then(function(data) {
             removeGraph();
-            buildLineGraph(data.data);
+            buildLineGraph(data.data, temperature.graphContainer);
         })
     }
 
-    function getAll() {
+    function getAllTempertatureValues() {
         return $http.get($rootScope.apiUrl + 'temperature/search', {params:{"frequency": temperature.frequency }});
     }
 
@@ -22,8 +22,13 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
         temperature.graphContainer.html("");
     }
 
+    function isLineHidden(id){
+        return d3.select("path#" + id).classed("hide");
+    }
+
     // d3 - procedural mess
-    function buildLineGraph(data) {
+    // credit to http://bl.ocks.org/natemiller/7dec148bb6aab897e561
+    function buildLineGraph(data, graphContainer) {
         var margin = {top: 10, right: 10, bottom: 100, left: 40},
             margin2 = {top: 430, right: 10, bottom: 20, left: 40},
             width = 960 - margin.left - margin.right,
@@ -57,7 +62,7 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
             .x(function(d) {return x2(d.date); })
             .y(function(d) {return y2(d.temperature); });
 
-        var svg = temperature.graphContainer.append("svg")
+        var svg = graphContainer.append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .style("overflow", "initial");
@@ -103,7 +108,11 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
             .attr("class","line")
             .attr("d", function(d) { return line(d.values); })
             .style("stroke", function(d) {return color(d.name);})
-            .attr("clip-path", "url(#clip)");
+            .attr("id", function(d) { return d.name; })
+            .attr("clip-path", "url(#clip)")
+            .on("hover",function(d){
+                this;
+            });
 
         focus.append("g")
             .attr("class", "x axis")
@@ -137,6 +146,7 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
             .attr("height", height2 + 7);
 
         buildLegend(sources, color, svg, width);
+        appendHoverText(svg, margin, width, height, x, y, data);
 
         function brush() {
             x.domain(brush.empty() ? x2.domain() : brush.extent());
@@ -146,12 +156,7 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
         }
     }
 
-    function getGraphTitle(){
-        var title = " - Averaged by ";
-        if (temperature.frequency === "day") return "";
-        return title + temperature.frequency;
-    }
-
+    // legend item
     function buildLegend(sources, color, svg, width) {
         var legend = svg.append("g")
             .attr("class", "legend")
@@ -167,7 +172,20 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
             .attr("y", function(d, i){ return i *  20;})
             .attr("width", 10)
             .attr("height", 10)
-            .style("fill", function(d) {return color(d.name);});
+            .style("fill", function(d) {return color(d.name);})
+            .on("click", function(d) {
+                // click event - hide or show graph
+                var keyElement = d3.select(this);
+                if (!keyElement.classed("clicked")) {
+                    keyElement.classed("clicked", true);
+                    d3.select("path#" + d.name).classed("hide", true);
+                }
+                else {
+                    keyElement.classed("clicked", false);
+                    d3.select("path#" + d.name).classed("hide", false);
+                }
+            })
+            .attr("data-name", function(d) { d.name; });
 
         legend.selectAll('text')
             .data(sources)
@@ -179,6 +197,57 @@ app.controller('temperatureCtrl', function($scope, $http, $rootScope){
                 var text = d.name.charAt(0).toUpperCase() + d.name.slice(1);
                 return text;
             });
+    }
+
+    // on hover item
+    // credit to https://bl.ocks.org/mbostock/3902569
+    function appendHoverText(svg, margin, width, height, x, y, data) {
+        var bisectDate = d3.bisector(function(d) { return d.date; }).left;
+
+        var hoverText = svg.append("g")
+            .attr("class", "focus")
+            .style("display", "none");
+
+        hoverText.append("circle")
+            .attr("r", 4.5);
+
+        hoverText.append("text")
+            .attr("x", 9)
+            .attr("dy", ".35em");
+
+        svg.append("rect")
+            .attr("class", "overlay")
+            .attr("width", width)
+            .attr("height", height)
+            .on("mouseover", function() { hoverText.style("display", null); })
+            .on("mouseout", function() { hoverText.style("display", "none"); })
+            .on("mousemove", mousemove)
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");;
+
+        function mousemove() {
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(data, x0, 1),
+                d0 = data[i - 1],
+                d1 = data[i],
+                d = x0 - d0.date > d1.date - x0 ? d1 : d0,
+                y0 = 0,
+                text,
+                minHidden = isLineHidden("min"),
+                maxHidden = isLineHidden("max");
+            if ((Math.abs(y(d.max) - d3.mouse(this)[1]) < Math.abs(y(d.min) - d3.mouse(this)[1]) &&
+                !maxHidden) || (minHidden && !maxHidden)) {
+                y0 = y(d.max);
+                text = d.max;
+            }
+            else if(!minHidden) {
+                y0 = y(d.min);
+                text = d.min;
+            }
+            else { hoverText.style("display", "none"); }
+
+            hoverText.attr("transform", "translate(" + (x(d.date) + margin.left)  + "," + (y0 + margin.top) + ")");
+            hoverText.select("text").text(parseFloat(text).toFixed(2));
+        }
     }
 
     temperature.getDataAndBuildGraph();
