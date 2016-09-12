@@ -6,6 +6,6 @@
     "bootstrap": "latest",
     "angular-ui-router": "latest",
     "angular-mocks": "latest",
-    "d3": "latest"
+    "d3": "3.5.17"
   }
 }
