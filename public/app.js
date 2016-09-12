@@ -8,7 +8,7 @@ var app = angular.module("cwv", ['ui.router'])
             function ($rootScope,   $state,   $stateParams) {
                 $rootScope.$state = $state;
                 $rootScope.$stateParams = $stateParams;
-                $rootScope.webUrl = "http://127.0.0.1:80";
+                $rootScope.webUrl = "http://127.0.0.1:3000";
                 $rootScope.apiUrl = "http://127.0.0.1:9000/";
             }]
     );

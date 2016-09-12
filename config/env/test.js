@@ -15,7 +15,7 @@ module.exports = {
         web: {
             name: 'web-ui',
             testpath: './server/**/*.spec.js',
-            port: 81
+            port: 3001
         },
         api: {
             name: 'api',

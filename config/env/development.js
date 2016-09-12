@@ -14,7 +14,7 @@ module.exports = {
     connections: {
         web: {
             name: 'web-ui',
-            port: 80
+            port: 3000
         },
         api: {
             name: 'api',
